@@ -1,0 +1,28 @@
+appId: com.jingyun.hermesdesktop
+productName: Hermes Desktop
+directories:
+  output: ../../dist/installer
+  buildResources: ../../resources/installer
+icon: ../../resources/installer/icon.ico
+files:
+  - dist/**/*
+  - package.json
+extraResources:
+  - from: ../../resources/compose
+    to: compose
+  - from: ../../.env.local.encrypted
+    to: .env.local.encrypted
+win:
+  icon: ../../resources/installer/icon.ico
+  target:
+    - nsis
+  artifactName: "Hermes-Desktop-Setup-${version}.${ext}"
+  signAndEditExecutable: false
+nsis:
+  oneClick: true
+  perMachine: false
+  allowToChangeInstallationDirectory: false
+  runAfterFinish: true
+  installerIcon: ../../resources/installer/icon.ico
+  uninstallerIcon: ../../resources/installer/icon.ico
+  include: ../../resources/installer/installer.nsh

@@ -1,0 +1,70 @@
+services:
+  hermes-runtime:
+    image: ${HERMES_IMAGE:-ghcr.io/nousresearch/hermes-agent:latest}
+    container_name: hermes-desktop-runtime
+    restart: unless-stopped
+    ports:
+      - "8642:8642"
+    volumes:
+      - hermes_runtime_data:/root/.hermes
+    environment:
+      - API_SERVER_ENABLED=true
+      - API_SERVER_HOST=0.0.0.0
+      - API_SERVER_PORT=8642
+      - API_SERVER_KEY=hermes-local-key
+      - GATEWAY_ALLOW_ALL_USERS=true
+    command: gateway run
+    networks:
+      - hermes-network
+
+  open-webui:
+    image: ${OPENWEBUI_IMAGE:-ghcr.io/open-webui/open-webui:main}
+    container_name: hermes-desktop-webui
+    restart: unless-stopped
+    ports:
+      - "3004:8080"
+    volumes:
+      - open_webui_data:/app/backend/data
+    environment:
+      # Hermes Agent 作为默认连接
+      - OPENAI_API_BASE_URL=http://hermes-runtime:8642/v1
+      - OPENAI_API_KEY=hermes-local-key
+      # 允许用户在 Open WebUI 中添加其他连接
+      - ENABLE_OPENAI_API=true
+      - ENABLE_OLLAMA_API=false
+      - ENABLE_SIGNUP=true
+      - DEFAULT_MODELS=hermes-agent
+      - WEBUI_AUTH=false
+      - ENABLE_ADMIN_EXPORT=true
+      - WEBUI_BANNERS=[{"id":"hermes-config","type":"info","title":"⚙️ Hermes 配置","content":"Hermes 的相关配置请前往 <a href='http://localhost:9119' target='_blank' style='color:#3b82f6;text-decoration:underline'>配置面板</a>","dismissible":true,"timestamp":0}]
+    depends_on:
+      - hermes-runtime
+    networks:
+      - hermes-network
+
+  hermes-dashboard:
+    image: ${HERMES_IMAGE:-ghcr.io/nousresearch/hermes-agent:latest}
+    container_name: hermes-desktop-dashboard
+    restart: unless-stopped
+    ports:
+      - "9119:9119"
+    volumes:
+      - hermes_runtime_data:/root/.hermes
+    command: dashboard --host 0.0.0.0 --port 9119 --insecure
+    depends_on:
+      - hermes-runtime
+    networks:
+      - hermes-network
+
+volumes:
+  hermes_runtime_data:
+    name: hermes-desktop-runtime-data
+    external: true
+  open_webui_data:
+    name: hermes-desktop-webui-data
+    external: true
+
+networks:
+  hermes-network:
+    name: hermes-desktop-network
+    driver: bridge

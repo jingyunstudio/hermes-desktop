@@ -1,0 +1,24 @@
+appId: com.jingyun.hermesdesktop
+productName: Hermes Desktop Offline
+directories:
+  output: ../../dist/installer-offline
+  buildResources: ../../resources/installer
+files:
+  - dist/**/*
+  - package.json
+extraResources:
+  - from: ../../resources/offline-images
+    to: offline-images
+    filter:
+      - "*.tar"
+      - "*.tar.gz"
+win:
+  target:
+    - nsis
+  artifactName: "Hermes-Desktop-Offline-Setup-${version}.${ext}"
+  signAndEditExecutable: false
+nsis:
+  oneClick: true
+  perMachine: false
+  allowToChangeInstallationDirectory: false
+  runAfterFinish: true

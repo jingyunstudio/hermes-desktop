@@ -1,0 +1,19 @@
+{
+  "name": "@hermes-desktop/runtime-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo \"TODO lint\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hermes-desktop/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3"
+  }
+}

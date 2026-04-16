@@ -1,0 +1,14 @@
+node_modules/
+.pnpm-store/
+dist/
+out/
+coverage/
+.vscode/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+resources/offline-images/*.tar
+resources/offline-images/*.tar.gz
+.turbo/
