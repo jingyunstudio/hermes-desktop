@@ -201,7 +201,7 @@ export class DockerManager {
               log(trimmed);
             }
           },
-          180000, // 180s timeout (3分钟)
+          1800000, // 1800s timeout (30分钟，适应极慢的网络环境)
         );
 
         if (pullResult.code === 0) {

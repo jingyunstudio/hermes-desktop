@@ -139,7 +139,7 @@ export class DockerComposeManager {
           log(trimmed);
         }
       },
-      300000, // 5分钟超时（compose pull 可能拉取多个镜像）
+      1800000, // 30分钟超时（compose pull 可能拉取多个镜像，适应极慢的网络环境）
     );
   }
 }
