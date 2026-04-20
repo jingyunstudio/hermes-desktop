@@ -6,13 +6,23 @@ services:
     ports:
       - "8642:8642"
     volumes:
-      - hermes_runtime_data:/root/.hermes
+      - hermes_runtime_data:/opt/data
+      # 挂载 Windows 用户目录（只读，安全）
+      - ${USERPROFILE}/Documents:/workspace/Documents:ro
+      - ${USERPROFILE}/Desktop:/workspace/Desktop:ro
+      - ${USERPROFILE}/Downloads:/workspace/Downloads
+      # 挂载工作目录（读写）
+      - ${HERMES_WORKSPACE:-${USERPROFILE}/HermesWorkspace}:/workspace/hermes
     environment:
       - API_SERVER_ENABLED=true
       - API_SERVER_HOST=0.0.0.0
       - API_SERVER_PORT=8642
-      - API_SERVER_KEY=hermes-local-key
+      - API_SERVER_KEY=${API_SERVER_KEY:-hermes-local-key}
+      - API_SERVER_CORS_ORIGINS=${API_SERVER_CORS_ORIGINS:-*}
       - GATEWAY_ALLOW_ALL_USERS=true
+      # Windows API 服务器配置
+      - WINDOWS_API_URL=http://host.docker.internal:8643
+      - WINDOWS_API_KEY=${API_SERVER_KEY:-hermes-local-key}
     command: gateway run
     networks:
       - hermes-network
@@ -28,7 +38,7 @@ services:
     environment:
       # Hermes Agent 作为默认连接
       - OPENAI_API_BASE_URL=http://hermes-runtime:8642/v1
-      - OPENAI_API_KEY=hermes-local-key
+      - OPENAI_API_KEY=${API_SERVER_KEY:-hermes-local-key}
       # 允许用户在 Open WebUI 中添加其他连接
       - ENABLE_OPENAI_API=true
       - ENABLE_OLLAMA_API=false
@@ -49,7 +59,7 @@ services:
     ports:
       - "9119:9119"
     volumes:
-      - hermes_runtime_data:/root/.hermes
+      - hermes_runtime_data:/opt/data
     command: dashboard --host 0.0.0.0 --port 9119 --insecure
     depends_on:
       - hermes-runtime

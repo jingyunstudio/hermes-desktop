@@ -21,8 +21,8 @@
     "typecheck": "turbo run typecheck",
     "encrypt-env": "node scripts/encrypt-env.js",
     "prepare:offline-images": "powershell -ExecutionPolicy Bypass -File ./scripts/prepare-offline-images.ps1",
-    "package:win": "pnpm encrypt-env && pnpm --filter desktop-shell exec electron-builder --config ../../build/electron-builder.yml --win",
-    "package:win:offline": "pnpm run prepare:offline-images && pnpm --filter desktop-shell exec electron-builder --config ../../build/electron-builder.offline.yml --win"
+    "package:win": "pnpm --filter @hermes-desktop/shared-types build && pnpm --filter desktop-shell build && pnpm encrypt-env && pnpm --filter desktop-shell exec electron-builder --config ../../build/electron-builder.yml --win",
+    "package:win:offline": "pnpm run prepare:offline-images && pnpm --filter @hermes-desktop/shared-types build && pnpm --filter desktop-shell build && pnpm encrypt-env && pnpm --filter desktop-shell exec electron-builder --config ../../build/electron-builder.offline.yml --win"
   },
   "devDependencies": {
     "turbo": "^2.1.3",

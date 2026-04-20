@@ -39,9 +39,40 @@ export interface OperationResult {
   errorCode?: string;
 }
 
+export type DeviceBindingStatus = "idle" | "pending" | "bound" | "expired" | "error";
+
+export interface DeviceBindingState {
+  status: DeviceBindingStatus;
+  pairCode?: string;
+  expiresAt?: number;
+  pollIntervalSec?: number;
+  instanceId?: string;
+  tenantId?: string;
+  userId?: string;
+  message?: string;
+  updatedAt: number;
+}
+
 export interface AppSettings {
   jingyunBaseUrl: string;
+  jingyunUserAppHermesUrl?: string;
+  jingyunTenantSlug?: string;
   openWebuiUrl: string;
   hermesApiUrl: string;
   autoLaunch: boolean;
+}
+
+export interface ModelConfig {
+  provider: string;
+  baseUrl: string;
+  defaultModel: string;
+  apiKey: string;
+}
+
+export interface TenantConfig {
+  baseUrl: string;
+  userAppUrl: string;
+  tenantSlug: string;
+  workspaceDir?: string; // Hermes 工作目录
+  configured: boolean;
 }
